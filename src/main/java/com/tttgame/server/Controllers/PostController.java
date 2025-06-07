@@ -30,5 +30,7 @@ public class PostController {
     public ResponseEntity<List<Post>> fetchPosts() {
         List<Post> posts = postService.fetchAllPosts();
         return ResponseEntity.ok(posts);
+
+
     }
 }
