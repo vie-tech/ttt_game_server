@@ -30,6 +30,7 @@ public class PostController {
     public ResponseEntity<List<Post>> fetchPosts() {
         List<Post> posts = postService.fetchAllPosts();
         System.out.println(posts);
+        System.out.println(posts);
         return ResponseEntity.ok(posts);
 
 
