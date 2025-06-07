@@ -1,0 +1,44 @@
+package com.tttgame.server.Service;
+
+import com.tttgame.server.Model.Users;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+    @Service
+    public class UserService {
+
+        public boolean isUserLoggedIn() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return authentication != null &&
+                   authentication.isAuthenticated() &&
+                   !(authentication instanceof AnonymousAuthenticationToken);
+        }
+
+        public Users getCurrentUser() {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null &&
+                authentication.isAuthenticated() &&
+                !(authentication instanceof AnonymousAuthenticationToken)) {
+
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof Users) {
+                    return (Users) principal;
+                }
+            }
+            return null;
+        }
+
+        public void setCurrentUser(UserDetails user) {
+            if (user == null) {
+                System.out.println("User passed is null (User service)");
+                return;
+            }
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                    user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+        }
+    }
