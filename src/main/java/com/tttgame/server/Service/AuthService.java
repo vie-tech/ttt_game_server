@@ -28,6 +28,8 @@ public class AuthService {
     private final CookieService cookieService;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
     public AuthService(JwtUtil jwtUtil,
                        AuthenticationManager authenticationManager,
                        UserRepository userRepository,
@@ -49,6 +51,7 @@ public class AuthService {
 
         String token = jwtUtil.generateToken(users.getUsername());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
+       /* userService.setCurrentUser(users);*/
         response.addCookie(cookie);
     }
 
@@ -61,4 +64,6 @@ public class AuthService {
         Cookie cookie = cookieService.createCookie("my_access_token", token);
         response.addCookie(cookie);
     }
+
+
 }

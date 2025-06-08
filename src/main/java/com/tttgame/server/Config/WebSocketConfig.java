@@ -1,24 +1,38 @@
 package com.tttgame.server.Config;
 
 
-import com.tttgame.server.Sockets.MyWebSocketHandler;
+import com.tttgame.server.Sockets.CustomHandshakeHandler;
+import com.tttgame.server.Sockets.JwtHandShakeInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.*;
+
 
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+    @Autowired
+    JwtHandShakeInterceptor jwtHandShakeInterceptor;
 
-    private final MyWebSocketHandler myWebSocketHandler;
+    @Autowired
+    CustomHandshakeHandler customHandshakeHandler;
 
-    public WebSocketConfig(MyWebSocketHandler myWebSocketHandler) {
-        this.myWebSocketHandler = myWebSocketHandler;
+
+    @Override
+    public void registerStompEndpoints(StompEndpointRegistry registry) {
+        registry.addEndpoint("/wss")
+                .addInterceptors(jwtHandShakeInterceptor)
+                .setHandshakeHandler(customHandshakeHandler)
+                .setAllowedOriginPatterns("*")
+                .withSockJS();
+
     }
 
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(myWebSocketHandler, "/ws"); // define your endpoint URL here
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker("/topic");
+        registry.setUserDestinationPrefix("/user");
     }
 }

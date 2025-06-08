@@ -44,6 +44,7 @@ public class Users implements UserDetails {
 
     }
 
+
     public List<Match> getMatchesAsPlayer1() {
         return matchesAsPlayer1;
     }

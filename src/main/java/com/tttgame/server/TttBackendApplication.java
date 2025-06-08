@@ -17,8 +17,5 @@ public class TttBackendApplication {
 
 	}
 
-	public void test(){
-		UserDetails users =  userService.getCurrentUser();
-	}
 
 }

@@ -1,6 +1,7 @@
 package com.tttgame.server.Model;
 
 
+import com.tttgame.server.Enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,8 @@ public class FriendRequest {
     @JoinColumn(name = "receiver_id", nullable = false)
     private Users receiver;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RequestStatus requestStatus = RequestStatus.PENDING;
 
 }

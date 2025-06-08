@@ -8,37 +8,59 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-    @Service
-    public class UserService {
+import java.util.Map;
 
-        public boolean isUserLoggedIn() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            return authentication != null &&
-                   authentication.isAuthenticated() &&
-                   !(authentication instanceof AnonymousAuthenticationToken);
-        }
+@Service
+public class UserService {
 
-        public Users getCurrentUser() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null &&
+    public boolean isUserLoggedIn() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null &&
+                authentication.isAuthenticated() &&
+                !(authentication instanceof AnonymousAuthenticationToken);
+    }
+
+    public Users getCurrentUser() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null &&
                 authentication.isAuthenticated() &&
                 !(authentication instanceof AnonymousAuthenticationToken)) {
 
-                Object principal = authentication.getPrincipal();
-                if (principal instanceof Users) {
-                    return (Users) principal;
-                }
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof Users) {
+                return (Users) principal;
             }
-            return null;
+        }
+        return null;
+    }
+
+
+    public Map<String, Object> getUserObject() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null &&
+                authentication.isAuthenticated() &&
+                !(authentication instanceof AnonymousAuthenticationToken)) {
+
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof Users) {
+                return Map.of("email", ((Users) principal).getEmail(), "user"
+                        , ((Users) principal).getUsername());
+            }
         }
 
-        public void setCurrentUser(UserDetails user) {
-            if (user == null) {
-                System.out.println("User passed is null (User service)");
-                return;
-            }
-            Authentication auth = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
-        }
+        return null;
     }
+
+    public void setCurrentUser(UserDetails user) {
+        if (user == null) {
+            System.out.println("User passed is null (User service)");
+            return;
+        }
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+}
