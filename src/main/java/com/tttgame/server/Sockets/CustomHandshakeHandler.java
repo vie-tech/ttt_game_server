@@ -16,11 +16,11 @@ public class CustomHandshakeHandler extends DefaultHandshakeHandler {
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler webSocketHandler, Map<String, Object> attributes){
         String username = (String)  attributes.get("user");
-
-        if(username == null){
+        String uid = (String) attributes.get("user_id");
+        if(username == null || uid == null){
             return null;
         }
 
-        return ()->username;
+        return ()->uid;
     }
 }

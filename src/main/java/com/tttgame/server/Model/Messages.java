@@ -3,6 +3,7 @@ package com.tttgame.server.Model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -24,6 +25,9 @@ public class Messages {
     @JoinColumn(name = "receiver_id", nullable = false)
     private Users receiver;
 
+
+    private String content;
+
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timeSent;
+    private Date timeSent = Date.from(Instant.now());
 }

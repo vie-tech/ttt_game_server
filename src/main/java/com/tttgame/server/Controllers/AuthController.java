@@ -31,6 +31,8 @@ public class AuthController {
     @PreAuthorize("permitAll")
     public ResponseEntity<?> validateSession() {
         Map<String, Object> user = userService.getUserObject();
+        System.out.println(user.get("user"));
+        System.out.println(user.get("email"));
         boolean isAuthenticated = user.isEmpty();
         return ResponseEntity.ok(Map.of(
                         "success", true,

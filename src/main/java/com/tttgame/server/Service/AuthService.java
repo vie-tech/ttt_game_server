@@ -47,9 +47,8 @@ public class AuthService {
     public void loginUser(LoginDTO request, HttpServletResponse response) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-        UserDetails users = (Users) authentication.getPrincipal();
-
-        String token = jwtUtil.generateToken(users.getUsername());
+        Users users = (Users) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(users.getUsername(),users.getUID());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
        /* userService.setCurrentUser(users);*/
         response.addCookie(cookie);
@@ -60,7 +59,7 @@ public class AuthService {
                 request.email());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Users savedUser = userRepository.save(user);
-        String token = jwtUtil.generateToken(savedUser.getUsername());
+        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getUID());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
         response.addCookie(cookie);
     }

@@ -19,8 +19,9 @@ public class JwtUtil {
        @Value("${jwt.secret}")
         private String secretkey;
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String uid) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("uid", uid);
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -44,6 +45,10 @@ public class JwtUtil {
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
         final Claims claims = extractAllClaims(token);
         return claimResolver.apply(claims);
+    }
+
+    public String extractUid(String token) {
+        return extractClaim(token, claims -> claims.get("uid", String.class));
     }
 
     private Claims extractAllClaims(String token) {

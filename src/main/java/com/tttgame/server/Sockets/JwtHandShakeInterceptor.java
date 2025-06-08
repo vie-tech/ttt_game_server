@@ -33,7 +33,10 @@ public class JwtHandShakeInterceptor implements HandshakeInterceptor {
                        if ("my_access_token".equals(cookie.getName())) {
                            String token = cookie.getValue();
                            String username = jwtUtil.extractUserName(token);
+                           String uid = jwtUtil.extractUid(token);
+
                            attributes.put("user", username);  // Save username to handshake attributes
+                           attributes.put("user_id", uid);
                            break;
                        }
                    }
