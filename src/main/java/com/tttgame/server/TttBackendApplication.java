@@ -14,11 +14,7 @@ public class TttBackendApplication {
 	UserService userService;
 	public static void main(String[] args) {
 		SpringApplication.run(TttBackendApplication.class, args);
-
 	}
 
-	public void test(){
-		UserDetails users =  userService.getCurrentUser();
-	}
 
 }

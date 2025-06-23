@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class AuthService {
@@ -28,6 +30,8 @@ public class AuthService {
     private final CookieService cookieService;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
     public AuthService(JwtUtil jwtUtil,
                        AuthenticationManager authenticationManager,
                        UserRepository userRepository,
@@ -45,10 +49,10 @@ public class AuthService {
     public void loginUser(LoginDTO request, HttpServletResponse response) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
-        UserDetails users = (Users) authentication.getPrincipal();
-
-        String token = jwtUtil.generateToken(users.getUsername());
+        Users users = (Users) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(users.getUsername(),users.getUid());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
+       /* userService.setCurrentUser(users);*/
         response.addCookie(cookie);
     }
 
@@ -57,8 +61,10 @@ public class AuthService {
                 request.email());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Users savedUser = userRepository.save(user);
-        String token = jwtUtil.generateToken(savedUser.getUsername());
+        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getUid());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
         response.addCookie(cookie);
     }
+
+
 }

@@ -41,7 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = null;
 
         if (request.getServletPath().startsWith("/api/auth/login") ||
-                        request.getServletPath().startsWith("/api/auth/register")) {
+                        request.getServletPath().startsWith("/api/auth/register") || request.getServletPath().startsWith("/wss")) {
                     filterChain.doFilter(request, response);
                     return;
                 }
@@ -72,7 +72,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
         }else{
-            System.out.println("No token found");
+            System.out.println("No token found: JWT FILTER");
             response.sendError(401, "No token found");
         }
 
