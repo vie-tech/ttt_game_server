@@ -36,10 +36,6 @@ public class ChatController {
     public void sendPrivateMessage(@Payload PrivateMessageDTO message, Principal principal){
 
         messageService.saveMessageToDatabase(message, principal);
-        messageTemplate.convertAndSendToUser(
-                message.getReceiver(),
-                "/queue/messages",
-                message
-        );
+        messageTemplate.convertAndSend("/topic/private."+message.getRoomId(), message);
     }
 }

@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class AuthService {
@@ -48,7 +50,7 @@ public class AuthService {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         Users users = (Users) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(users.getUsername(),users.getUID());
+        String token = jwtUtil.generateToken(users.getUsername(),users.getUid());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
        /* userService.setCurrentUser(users);*/
         response.addCookie(cookie);
@@ -59,7 +61,7 @@ public class AuthService {
                 request.email());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Users savedUser = userRepository.save(user);
-        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getUID());
+        String token = jwtUtil.generateToken(savedUser.getUsername(), savedUser.getUid());
         Cookie cookie = cookieService.createCookie("my_access_token", token);
         response.addCookie(cookie);
     }

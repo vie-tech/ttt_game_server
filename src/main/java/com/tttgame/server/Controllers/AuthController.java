@@ -3,6 +3,8 @@ package com.tttgame.server.Controllers;
 
 import com.tttgame.server.DTO.LoginDTO;
 import com.tttgame.server.DTO.SignupDTO;
+import com.tttgame.server.DTO.UserDTO;
+import com.tttgame.server.Model.Users;
 import com.tttgame.server.Service.AuthService;
 import com.tttgame.server.Service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,8 +34,6 @@ public class AuthController {
     @PreAuthorize("permitAll")
     public ResponseEntity<?> validateSession() {
         Map<String, Object> user = userService.getUserObject();
-        System.out.println(user.get("user"));
-        System.out.println(user.get("email"));
         boolean isAuthenticated = user.isEmpty();
         return ResponseEntity.ok(Map.of(
                         "success", true,
@@ -40,7 +41,8 @@ public class AuthController {
                         "status", 200,
                         "isAuthenticated", !isAuthenticated,
                         "user", user.get("user"),
-                        "email", user.get("email")
+                        "email", user.get("email"),
+                        "uid", user.get("uid")
                 )
         );
     }
@@ -60,5 +62,12 @@ public class AuthController {
         authService.registerUser(request, response);
         return ResponseEntity.ok(Map.of("success", true, "message", "account " +
                 "created", "status", HttpStatus.CREATED.value()));
+    }
+
+    @PostMapping("/all/users")
+    public ResponseEntity<?> getAllUsers(){
+        List<Users> users = userService.retrieveAllUsers();
+        List<UserDTO> userDTO = users.stream().map(UserDTO::new).toList();
+        return ResponseEntity.ok(Map.of("success", true, "users", userDTO));
     }
 }

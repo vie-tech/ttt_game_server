@@ -1,6 +1,8 @@
 package com.tttgame.server.Service;
 
 import com.tttgame.server.Model.Users;
+import com.tttgame.server.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,10 +10,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
 public class UserService {
+
+    @Autowired
+    UserRepository userRepository;
 
     public boolean isUserLoggedIn() {
         Authentication authentication =
@@ -47,7 +53,7 @@ public class UserService {
             Object principal = authentication.getPrincipal();
             if (principal instanceof Users) {
                 return Map.of("email", ((Users) principal).getEmail(), "user"
-                        , ((Users) principal).getUsername());
+                        , ((Users) principal).getUsername(), "uid", ((Users) principal).getUid());
             }
         }
 
@@ -62,5 +68,9 @@ public class UserService {
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
+    public List<Users> retrieveAllUsers(){
+       return userRepository.findAll();
     }
 }

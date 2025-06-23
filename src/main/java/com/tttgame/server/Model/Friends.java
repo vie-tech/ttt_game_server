@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "friends")
 @Data
@@ -30,6 +32,9 @@ public class Friends {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RequestStatus status = RequestStatus.PENDING;
+
+    @Column(nullable = false, unique = true, updatable = false)
+       private String friendshipId = UUID.randomUUID().toString();
 
     @Column(nullable = false)
        private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();

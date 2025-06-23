@@ -72,7 +72,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
         }else{
-            System.out.println("No token found");
+            System.out.println("No token found: JWT FILTER");
             response.sendError(401, "No token found");
         }
 

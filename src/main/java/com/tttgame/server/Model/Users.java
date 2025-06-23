@@ -37,7 +37,7 @@ public class Users implements UserDetails {
     private List<Match> matchesAsPlayer2;
 
     @Column(unique = true, nullable = false)
-    private String UID = UUID.randomUUID().toString(); // generate default UID
+    private String uid = UUID.randomUUID().toString(); // generate default UID
 
     @OneToMany(mappedBy = "owner")
     private List<Post> posts;

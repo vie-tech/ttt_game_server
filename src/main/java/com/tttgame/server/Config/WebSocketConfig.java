@@ -46,25 +46,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
 
-   /* @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message,
-                                      MessageChannel channel) {
-                StompHeaderAccessor accessor =
-                        MessageHeaderAccessor.getAccessor(message,
-                                StompHeaderAccessor.class);
-                if (accessor != null && accessor.getUser() == null) {
-                    Principal user =
-                            (Principal) accessor.getSessionAttributes().get(
-                                    "user");
-                    if (user != null) {
-                        accessor.setUser(user);
-                    }
-                }
-                return message;
-            }
-        });
-    }*/
+
 }
